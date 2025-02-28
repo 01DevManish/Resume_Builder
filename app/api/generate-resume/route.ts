@@ -1,7 +1,6 @@
 import { extractParagraphs } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer";
-
 const svgIcons = {
   phone: ` <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -27,18 +26,15 @@ const svgIcons = {
   globe: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 h-4 w-4"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
 };
 
-export async function POST(req: NextRequest) {
-  let browser;
-  const body = await req.json();
 
+export async function POST(req: NextRequest) {
+  const body = await req.json();
   try {
-    browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    // Puppeteer Browser Launch
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    await page.setDefaultNavigationTimeout(60000);
-
+    // PDF ke liye HTML content
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -191,34 +187,24 @@ export async function POST(req: NextRequest) {
 </body>
 </html>
 `;
-    await page.setContent(htmlContent, {
-      waitUntil: ["load", "domcontentloaded", "networkidle0"],
-      timeout: 60000,
-    });
+    
+    await page.setContent(htmlContent);
 
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: {
-        right: "10px",
-        left: "10px",
-      },
-    });
+    // PDF Generate
+    const pdfBuffer = await page.pdf({ format: "A4" });
+
     await browser.close();
 
-    const response = new NextResponse(pdf);
-    response.headers.set("Content-Type", "application/pdf");
-    response.headers.set(
-      "Content-Disposition",
-      "attachment; filename=resume.pdf"
-    );
-
-    return response;
+    // PDF Response bhejo
+    return new NextResponse(pdfBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": 'attachment; filename="resume.pdf"',
+      },
+    });
   } catch (error) {
     console.error("Error generating PDF:", error);
-    return NextResponse.json(
-      { error: "Failed to generate PDF" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
