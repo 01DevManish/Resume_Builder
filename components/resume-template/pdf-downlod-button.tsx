@@ -6,7 +6,7 @@ const PDFDownloadButton = () => {
   const handleDownload = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("https://resume-phi-swart.vercel.app/api/generate-resume", {
+      const response = await fetch("/api/generate-resume", {
         method: "POST",
       });
 
