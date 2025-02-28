@@ -1,8 +1,0 @@
-{
-  "functions": {
-    "api/generate-resume/route.ts": {
-      "memory": 3008, // Allocate 3GB of memory
-      "maxDuration": 30 // Increase timeout to 30 seconds
-    }
-  }
-}
