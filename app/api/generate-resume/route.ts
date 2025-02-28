@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
     // Puppeteer Browser Launch
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: "new" as any });
     const page = await browser.newPage();
 
     // PDF ke liye HTML content
