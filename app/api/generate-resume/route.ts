@@ -1,7 +1,8 @@
+import puppeteer from "puppeteer-core";
 import { extractParagraphs } from "@/lib/utils";
-import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
 
+import { NextRequest, NextResponse } from "next/server";
+import os from "os";
 const svgIcons = {
   phone: ` <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -28,18 +29,25 @@ const svgIcons = {
 };
 
 export async function POST(req: NextRequest) {
-  let browser;
   const body = await req.json();
 
-  try {
-    browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
+  // Set Chromium path based on OS
+  let chromiumPath = "";
+  if (os.platform() === "win32") {
+    chromiumPath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"; // Windows
+  } else if (os.platform() === "darwin") {
+    chromiumPath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // Mac
+  } else {
+    chromiumPath = "/usr/bin/chromium-browser"; // Linux
+  }
 
-    await page.setDefaultNavigationTimeout(60000);
+  const browser = await puppeteer.launch({
+    executablePath: chromiumPath, // Use the correct Chromium path
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
 
-    const htmlContent = `<!DOCTYPE html>
+  const page = await browser.newPage();
+  await page.setContent(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -190,35 +198,14 @@ export async function POST(req: NextRequest) {
   </div>
 </body>
 </html>
-`;
-    await page.setContent(htmlContent, {
-      waitUntil: ["load", "domcontentloaded", "networkidle0"],
-      timeout: 60000,
-    });
+`);
+  const pdf = await page.pdf({ format: "A4", printBackground: true });
 
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: {
-        right: "10px",
-        left: "10px",
-      },
-    });
-    await browser.close();
-
-    const response = new NextResponse(pdf);
-    response.headers.set("Content-Type", "application/pdf");
-    response.headers.set(
-      "Content-Disposition",
-      "attachment; filename=resume.pdf"
-    );
-
-    return response;
-  } catch (error) {
-    console.error("Error generating PDF:", error);
-    return NextResponse.json(
-      { error: "Failed to generate PDF" },
-      { status: 500 }
-    );
-  }
+  await browser.close();
+  return new Response(pdf, {
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=resume.pdf",
+    },
+  });
 }
