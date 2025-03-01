@@ -1,4 +1,9 @@
 import Footer from "./footer";
+import type { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Resume Builder",
+  description: "Build Resume in a Minutes",
+};
 
 const EditResume = ({
   children,
