@@ -25,6 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Set the favicon/logo */}
+        <link rel="icon" href="/cv.png" />
+      </head>
       <body className={` ${inter.variable} ${spaceGrotesk.variable}`}>
         {children}
       </body>
