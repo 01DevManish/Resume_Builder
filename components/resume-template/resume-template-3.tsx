@@ -402,13 +402,6 @@ export const ResumeComponent = ({
             )}
           </div>
         </header>
-        <h2 className="text-lg font-bold text-black-500 uppercase tracking-normal border-b border-gray-300 pb-1">
-  Overview
-</h2>
-
-
-       
-  {profile?.summary}
 
 
 
