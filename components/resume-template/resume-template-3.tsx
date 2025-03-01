@@ -407,9 +407,9 @@ export const ResumeComponent = ({
 </h2>
 
 
-        <p className="text-xs font-medium text-gray-700 text-justify leading-tight">
+       
   {profile?.summary}
-</p>
+
 
 
 
