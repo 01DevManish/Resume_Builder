@@ -24,14 +24,9 @@ const Page = () => {
             creates ATS-friendly resumes in minutes, not hours.
           </p>
 
-          {/* <SelectDialog /> */}
+          <SelectDialog />
 
-          <Link href="/resume/3/edit/content">
-            <ShinyButton>
-              Start Building
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </ShinyButton>
-          </Link>
+         
 
           <div
             style={{
