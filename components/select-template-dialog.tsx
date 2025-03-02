@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import img1 from "@/public/resume-templates/001.png";
+import img2 from "@/public/resume-templates/002.png";
+import img3 from "@/public/resume-templates/003.png";
+import img4 from "@/public/resume-templates/004.png";
+import img5 from "@/public/resume-templates/005.png";
 import useResumeStore from "@/store/resumeStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -30,9 +34,10 @@ import { ScrollArea } from "./ui/scroll-area";
 
 const images = [
   { src: img1, id: 1 },
-  { src: img1, id: 2 },
-  { src: img1, id: 3 },
-  { src: img1, id: 4 },
+  { src: img2, id: 2 },
+  { src: img3, id: 3 },
+  { src: img4, id: 4 },
+  { src: img5, id: 5 },
 ];
 
 const SelectDialog = () => {
