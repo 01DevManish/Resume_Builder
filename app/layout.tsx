@@ -29,11 +29,12 @@ export default function RootLayout({
       <head>
         {/* Set the favicon/logo */}
         <link rel="icon" href="/cv.png" />
-        <Analytics/>
-        <SpeedInsights/>
+
       </head>
       <body className={` ${inter.variable} ${spaceGrotesk.variable}`}>
         {children}
+        <Analytics/>
+        <SpeedInsights/>
       </body>
     </html>
   );
